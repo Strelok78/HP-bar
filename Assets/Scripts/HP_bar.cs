@@ -6,25 +6,29 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Slider))]
 public class HP_bar : MonoBehaviour
 {
-    Slider slider;
+    [SerializeField] private HeroCharacteristics _heroCaracteristics;
+    private Slider _healthIndicatorSlider;
+
     private void Awake()
     {
-        slider = GetComponent<Slider>();
+        _healthIndicatorSlider = GetComponent<Slider>();
+        _healthIndicatorSlider.maxValue = _heroCaracteristics.MaxHealth;
+        _healthIndicatorSlider.wholeNumbers = false;
+        _healthIndicatorSlider.value = _healthIndicatorSlider.maxValue;
     }
 
-    public void Damage(float damage)
+    private void OnEnable()
     {
-        if (slider != null && slider.value != slider.minValue)
-        {
-            slider.value -= damage;
-        }
+        _heroCaracteristics.ChangeHealthPointsIndicator += OnHealthChanged;
     }
 
-    public void Heal(float heal)
+    private void OnDisable()
     {
-        if(slider != null && slider.value != slider.maxValue)
-        {
-            slider.value += heal;
-        }
+        _heroCaracteristics.ChangeHealthPointsIndicator -= OnHealthChanged;
+    }
+
+    private void OnHealthChanged(float health)
+    {
+        _healthIndicatorSlider.value = health;
     }
 }
