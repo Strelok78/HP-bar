@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 public class HeroCharacteristics : MonoBehaviour
 {
-    public event UnityAction<float> ChangeHealthPointsIndicator;
+    public event UnityAction<float> HealthChanged;
 
     [SerializeField] private float _maxHealth;
     private float _currrentHealth;
@@ -23,11 +23,9 @@ public class HeroCharacteristics : MonoBehaviour
         if (_currrentHealth >= _minHealth)
         {
             _currrentHealth -= damage;
+            _currrentHealth = Mathf.Clamp(_currrentHealth, _minHealth, _maxHealth);
 
-            if (_currrentHealth < 0)
-                _currrentHealth = _minHealth;
-
-            ChangeHealthPointsIndicator.Invoke(_currrentHealth);
+            HealthChanged.Invoke(_currrentHealth);
         }
     }
 
@@ -36,11 +34,9 @@ public class HeroCharacteristics : MonoBehaviour
         if (_currrentHealth <= MaxHealth)
         {
             _currrentHealth += heal;
+            _currrentHealth = Mathf.Clamp(_currrentHealth, _minHealth, _maxHealth);
 
-            if (_currrentHealth > MaxHealth)
-                _currrentHealth = MaxHealth;
-
-            ChangeHealthPointsIndicator.Invoke(_currrentHealth);
+            HealthChanged.Invoke(_currrentHealth);
         }
     }
 }

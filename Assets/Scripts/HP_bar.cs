@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,6 +9,7 @@ public class HP_bar : MonoBehaviour
 {
     [SerializeField] private HeroCharacteristics _heroCaracteristics;
     private Slider _healthIndicatorSlider;
+    private Coroutine _barChanging;
 
     private void Awake()
     {
@@ -19,16 +21,30 @@ public class HP_bar : MonoBehaviour
 
     private void OnEnable()
     {
-        _heroCaracteristics.ChangeHealthPointsIndicator += OnHealthChanged;
+        _heroCaracteristics.HealthChanged += OnHealthChanged;
     }
 
     private void OnDisable()
     {
-        _heroCaracteristics.ChangeHealthPointsIndicator -= OnHealthChanged;
+        _heroCaracteristics.HealthChanged -= OnHealthChanged;
     }
 
     private void OnHealthChanged(float health)
     {
-        _healthIndicatorSlider.value = health;
+        if (_barChanging != null)
+            StopCoroutine(_barChanging);
+
+        _barChanging = StartCoroutine(BarSmoothing(health));
+    }
+
+    IEnumerator BarSmoothing(float health)
+    {
+        float smoothiness = Time.deltaTime * 5;
+
+        while (_healthIndicatorSlider.value != health)
+        {
+            _healthIndicatorSlider.value = Mathf.MoveTowards(_healthIndicatorSlider.value, health, smoothiness);
+            yield return null;
+        }
     }
 }
