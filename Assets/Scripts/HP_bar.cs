@@ -8,6 +8,8 @@ using UnityEngine.UI;
 public class HP_bar : MonoBehaviour
 {
     [SerializeField] private HeroCharacteristics _heroCaracteristics;
+    [SerializeField] private float _barSmoothinessRate;
+
     private Slider _healthIndicatorSlider;
     private Coroutine _barChanging;
 
@@ -39,7 +41,7 @@ public class HP_bar : MonoBehaviour
 
     IEnumerator BarSmoothing(float health)
     {
-        float smoothiness = Time.deltaTime * 5;
+        float smoothiness = Time.deltaTime * _barSmoothinessRate;
 
         while (_healthIndicatorSlider.value != health)
         {
