@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Slider))]
-public class HP_bar : MonoBehaviour
+public class HealthBarController : MonoBehaviour
 {
     [SerializeField] private HeroCharacteristics _heroCaracteristics;
     [SerializeField] private float _barSmoothinessRate;
